@@ -15,8 +15,8 @@ const User = new Schema({
         required: true
     },
     moderator: {
-        type: Number,
-        default: 0
+        type: Boolean,
+        default: false
     },
     date: {
         type: Date,
