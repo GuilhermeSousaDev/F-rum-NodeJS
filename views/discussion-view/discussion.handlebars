@@ -1,0 +1,28 @@
+{{#if doc}}
+    <div class="container mt-3">
+        <div>
+            <img style="width: 200px; height: 200px" src="../image/{{doc.image}}">
+            <h1>{{doc.title}}</h1>
+            <p>{{doc.description}}</p>
+            <small>Criado em: {{doc.date}}</small>
+            <br>
+            <button class="btn btn-success mt-4" id="btn">Entrar na Discussão</button>
+            <div style="display: none;" id="enter">
+                <h1>Deseja Entrar na Discussão?</h1>
+                <a href="/discussions/{{doc._id}}/posts"><button class="btn btn-primary">Sim</button></a>
+                <button class="btn btn-danger" id="btnnot">Não</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const btn = document.getElementById('btn')
+        btn.addEventListener('click', () => {
+            const div = document.getElementById('enter')
+            div.style.display = 'block'
+            const btnnot = document.getElementById('btnnot')
+            btnnot.addEventListener('click', () => {
+                div.style.display = 'none'
+            })
+        })
+    </script>
+{{/if}}

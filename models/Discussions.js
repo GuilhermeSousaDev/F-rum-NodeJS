@@ -4,10 +4,12 @@ const { Schema } = require('mongoose')
 const Discussions = new Schema({
     title: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     description: {
         type: String,
+        trim: true,
         default: "Sem descrição"
     },
     image: {
