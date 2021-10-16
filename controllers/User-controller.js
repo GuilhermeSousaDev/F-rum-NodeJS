@@ -1,6 +1,6 @@
-const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const Validate = require('../validators/validator')
+const Auth = require('../services/auth')
 
 const mongoose = require('mongoose')
 require('../models/User')
@@ -10,12 +10,26 @@ module.exports = {
     login: (req,res) => { 
         res.render('users/login')
     },
-    loginAuth: (req,res,next) => {
-        passport.authenticate("local", {
-            successRedirect: "/discussions",
-            failureRedirect: "/user/login",
-            failureFlash: true
-        })(req,res,next)
+    loginAuth: (req,res) => {
+        const { nome, email, password } = req.body
+        User.findOne({ nome, email }).lean().then(doc => {
+            if(!doc) {
+                req.flash("error", "Usuário não existe")
+                res.redirect('/user/login')
+            }else {
+                User.findOne({ nome, email, password }).lean().then(doc => {
+                    if(!doc) {
+                        req.flash("error", "Senha Incorreta")
+                        res.redirect('/user/login')
+                    }else {
+                        const { _id } = doc
+                        const token = Auth.createToken({ _id })
+                        res.cookie('token', token)
+                        res.redirect('/')
+                    }
+                })
+            }
+        })
     },
     register: (req,res) => {
         res.render('users/register')
@@ -44,7 +58,7 @@ module.exports = {
                     return
                 }
                 user.password = hash
-                user.save().then(doc => {
+                user.save().then(() => {
                     req.flash("success", "Usuário criado com sucesso")
                     res.redirect('/user/login')
                 }).catch(e => console.log(e))

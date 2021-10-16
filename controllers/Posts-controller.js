@@ -5,8 +5,8 @@ const Posts = mongoose.model('Post')
 
 module.exports = {
     main: (req,res) => {
-        Posts.find().then(doc => {
-            res.render('discussion-view/index', { doc })
+        Posts.find().lean().then(doc => {
+            res.render('post-view/index', { doc })
         }).catch(e => console.log(e))
     },
     postForId: (req,res) => {
@@ -16,7 +16,7 @@ module.exports = {
         }).catch(() => res.redirect('/'))
     },
     new: (req,res) => {
-        res.render('post-view/index', {
+        res.render('post-view/new', {
             css: 'new.css',
             js: 'new.js'
         })
@@ -32,7 +32,7 @@ module.exports = {
                     res.redirect('/posts')
                     req.flash("error", "Erro ao subir imagem")
                 }else {
-                    Posts.create({ title, text, image: filename }).then(doc => {
+                    Posts.create({ title, text, author: req.user.nome , image: filename }).then(doc => {
                         res.redirect('/posts')
                         req.flash("success", "Post com id " + doc._id + "criado com sucesso")
                     })

@@ -3,11 +3,8 @@ const handlebars = require('express-handlebars')
 const bodyParser = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
-const passport = require('passport')
 const fileUpload = require('express-fileupload')
-const path = require('path')
-
-
+const cookieParser = require('cookie-parser')
 
 module.exports = () => {
     const app = express()
@@ -42,8 +39,7 @@ module.exports = () => {
       limits: { fileSize: 50 * 1024 * 1024 },
     }));
 
-    app.use(passport.initialize())
-    app.use(passport.session())
+    app.use(cookieParser())
     app.use(express.static('public'))
     return app
 }
