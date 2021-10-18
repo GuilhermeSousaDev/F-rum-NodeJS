@@ -11,6 +11,6 @@ router.get('/:id/posts', controller.DisPosts)
 router.get('/delete/:id', controller.deleteDis)
 
 router.post('/new', controller.newPost)
-router.post('/:id/insertUser', controller.InsertUserDis)
+router.post('/:id/insertUser', authorize, controller.InsertUserDis)
 
 module.exports = router

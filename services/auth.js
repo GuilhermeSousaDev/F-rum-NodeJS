@@ -1,24 +1,26 @@
 const jwt = require('jsonwebtoken')
 
 module.exports = {
-    createToken: (data) => jwt.sign(data, global.SECRET, { expiresIn: '1d' }),
+    createToken: async (data) => jwt.sign(data, global.SECRET, { expiresIn: '1d' }),
 
-    decoded: token => {
-        jwt.verify(token, global.SALT_KEY, (err, decoded) => {
-            if(err) {
-                console.log(err)
-            }else {
-                return decoded
-            }
-        })
+    decoded: async token => {
+        const data = await jwt.verify(token, global.SECRET)
+        return data
     },
 
     authorize: (req,res,next) => {
-        const token = req.body.token || req.query.token || req.headers['x-access-token'] || req.cookies.token
+        const token = req.cookies.token
         if(!token) {
             res.redirect('/user/login')
         }else {
-            next()
+            jwt.verify(token, global.SECRET, (err, decoded) => {
+              if(err) {
+                res.redirect('/user/login')
+              }else {
+                next()
+              }
+            })
+
         }
     }
 }

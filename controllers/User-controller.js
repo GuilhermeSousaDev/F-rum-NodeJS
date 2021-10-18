@@ -7,7 +7,7 @@ require('../models/User')
 const User = mongoose.model('User')
 
 module.exports = {
-    login: (req,res) => { 
+    login: (req,res) => {
         res.render('users/login')
     },
     loginAuth: (req,res) => {
@@ -25,7 +25,7 @@ module.exports = {
                         const { _id } = doc
                         const token = Auth.createToken({ _id })
                         res.cookie('token', token)
-                        res.redirect('/')
+                        res.redirect('/discussions')
                     }
                 })
             }
@@ -34,7 +34,7 @@ module.exports = {
     register: (req,res) => {
         res.render('users/register')
     },
-    registerCreate: (req,res) => {
+    registerCreate: async (req,res) => {
         const { nome, email, password } = req.body
         const contract = new Validate()
         contract.emailExists(email, "Este email já existe")

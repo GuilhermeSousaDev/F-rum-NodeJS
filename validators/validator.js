@@ -7,12 +7,11 @@ let erros = []
 class Validator {
     erros = []
 
-    emailExists = (field, message) => {
-        User.find({ email: field }).lean().then(doc => {
-            if(doc) {
-                erros.push({ message: message })
-            }
-        })
+    emailExists = async (field, message) => {
+        const doc = await User.find({ email: field }).lean()
+        if(doc) {
+          erros.push({ message: message })
+        }
     }
     fieldEmpty = (field, message) => {
         if(!field || field.length == 0) {
