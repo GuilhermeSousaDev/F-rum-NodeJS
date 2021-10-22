@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const  { decoded } = require('../services/auth')
 
 require('../models/Discussions')
 const Discussion = mongoose.model('Discussions')
@@ -13,34 +14,46 @@ module.exports = {
             res.render('discussion-view/index', {
                 doc,
                 css: 'discussion.css',
-                js: 'discussion.js'
+                js: 'discussion.js',
+                user: req.cookies.token
             })
         }).catch(e => console.log(e))
     },
     mainWithId: (req,res) => {
         const { id } = req.params
-        Discussion.findOne({ _id: id }).lean().then(doc => {
-            res.render('discussion-view/discussion', { doc })
+        const token = decoded(req.cookies.token)
+        Discussion.findOne({ _id: id }).lean().then(docs => {
+            InsertUser.findOne({ user_id: token._id, discussion_id: id })
+              .lean()
+              .then(doc => {
+                if(doc) {
+                  res.render('discussion-view/discussion', { exists: true, docs })
+                }else {
+                  res.render('discussion-view/discussion', { exists: false, docs })
+                }
+              }).catch(e => console.log(e))
         }).catch(e => console.log(err))
     },
-    InsertUserDis: (req,res) => {
+    InsertUser: (req,res) => {
+        const token = decoded(req.cookies.token)
         const { id } =  req.params
-        InsertUser.create({ discussion_id: id, user_id: req.user._id }).then(doc => {
-            res.redirect('/discussions/' + id + '/post')
-        }).catch(e => console.log(e))
+        InsertUser.create({ discussion_id: id, user_id: token._id  }).then(() => {
+              res.redirect('/discussions/' + id + '/posts')
+          }).catch(e => console.log(e))
     },
     DisPosts: (req,res) => {
         const { id } = req.params
         Posts.find({ discussion: id }).lean().then(doc => {
-            res.render('discussion-view/posts', { doc })
+            res.render('discussion-view/posts', { doc, user: req.cookies.token })
         }).catch(e => console.log(e))
     },
     new: (req,res) => {
             res.render('discussion-view/new', {
-                css: 'new.css'
+                css: 'new.css',
+                user: req.cookies.token
             })
     },
-    newPost: (req,res) => {  
+    newPost: (req,res) => {
         if(req.files) {
             const file = req.files.image
             const filename = file.name

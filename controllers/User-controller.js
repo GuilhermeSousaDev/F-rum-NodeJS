@@ -10,7 +10,7 @@ module.exports = {
     login: (req,res) => {
         res.render('users/login')
     },
-    loginAuth: (req,res) => {
+    loginAuth: async (req,res) => {
         const { nome, email, password } = req.body
         User.findOne({ nome, email }).lean().then(doc => {
             if(!doc) {
@@ -24,6 +24,7 @@ module.exports = {
                     }else {
                         const { _id } = doc
                         const token = Auth.createToken({ _id })
+                        console.log(token)
                         res.cookie('token', token)
                         res.redirect('/discussions')
                     }

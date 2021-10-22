@@ -13,14 +13,14 @@ const Post = new Schema({
     discussion: {
         type: Schema.Types.ObjectId,
         ref: "Discussions",
-        required: true
+        required: false
     },
     image: {
         type: String,
         default: "../public/image/imagedefault.png"
     },
     author: {
-        type: Schema.Types.String,
+        type: Schema.Types.ObjectId,
         ref: "User"
     },
     date: {
