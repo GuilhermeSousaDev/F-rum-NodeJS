@@ -1,0 +1,14 @@
+<div class="container">
+{{#if message}}
+  <p>{{message}}</p>
+  <a href="posts/new/{{discussion_id}}"><button class="btn btn-success">Postar</button></a>
+{{else}}
+  {{#each doc}}
+      <div>
+          <img src="../image/{{image}}" alt="{{image}}">
+          <p>{{title}}</p>
+          <p>{{author.nome}}</p>
+      </div>
+  {{/each}}
+{{/if}}
+</div>

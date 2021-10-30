@@ -1,0 +1,8 @@
+<div class="container mt-4">
+    {{#each doc}}
+        <div class="mt-2">{{title}}</div>
+        <img style="width: 200px; height: 200px" src="../../public/image/{{image}}" alt="{{image}}">
+        <p>{{description}}</p>
+        <a href="discussions/{{_id}}"><button class="btn btn-primary">Entrar</button></a>
+    {{/each}}
+</div>

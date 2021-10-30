@@ -1,0 +1,18 @@
+<nav>
+    <div>
+        <input type="text" placeholder="Search...">
+        <box-icon name='search' id="bx-icon"></box-icon>
+    </div>
+    <div class="container-right">
+        <div class="routes">
+            <a href="/discussions">Discussions</a>
+            <a href="/posts">Posts</a>
+            {{#if user}}
+                <div class="img-perfil"></div>
+            {{else}}
+                <a href="/user/login">Login</a>
+                <a href="/user/registro">Signup</a>
+            {{/if}}
+        </div> 
+    </div>
+</nav>
