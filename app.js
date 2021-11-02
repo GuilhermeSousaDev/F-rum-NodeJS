@@ -20,7 +20,7 @@ app.get('/', authorize, async (req,res) => {
 
       const newToken = await createToken({ _id: doc._id, name: doc.nome })
       res.cookie('token', newToken)
-      res.render('index')
+      res.render('index', { user: req.cookies.token })
     } catch (e) {
       console.log(e)
     }

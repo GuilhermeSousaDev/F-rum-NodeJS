@@ -41,11 +41,21 @@ module.exports = {
               res.redirect('/discussions/' + id + '/posts')
           }).catch(e => console.log(e))
     },
-    DisPosts: (req,res) => {
-        const { id } = req.params
-        Posts.find({ discussion: id }).lean().then(doc => {
-            res.render('discussion-view/posts', { doc, user: req.cookies.token })
-        }).catch(e => console.log(e))
+    DisPosts: async (req,res) => {
+      const { id } = req.params
+      try {
+        const doc = await Posts.find({ discussion: id }).lean()
+        if(doc) {
+          res.render('post-view/index', { doc })
+        }else {
+          res.render('post-view/index', {
+            message: 'Esta Discussão não tem Postagens, Seja o Primeiro a postar',
+            discussion_id: id
+          })
+        }
+      } catch (e) {
+        console.log(e)
+      }
     },
     new: (req,res) => {
             res.render('discussion-view/new', {

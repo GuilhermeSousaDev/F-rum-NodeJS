@@ -1,0 +1,10 @@
+<form action="/posts/new" method="POST" enctype="multipart/form-data">
+    <h1>Nova Discussão</h1>
+    {{#if id}}
+      <input type="hidden" name="id" value="{{id}}">
+    {{/if}}
+    <input type="text" name="title" placeholder="Insira um Título">
+    <input type="text" name="text" placeholder="Insira uma descrição">
+    <input type="file" name="image">
+    <button type="submit">Cadastrar</button>
+</form>

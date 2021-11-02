@@ -8,7 +8,7 @@ const User = mongoose.model('User')
 
 module.exports = {
     main: (req,res) => {
-        Posts.find().lean().then(doc => {
+        Posts.find().populate('author').lean().then(doc => {
             res.render('post-view/index', { doc, user: req.cookies.token })
         }).catch(e => console.log(e))
     },
@@ -22,11 +22,12 @@ module.exports = {
         res.render('post-view/new', {
             css: 'new.css',
             js: 'new.js',
-            user: req.cookies.token
+            user: req.cookies.token,
+            id: req.params.id
         })
     },
-    newPost: async (req,res) => {
-        const { title, text } = req.body
+    newPost: (req,res) => {
+        const { title, text, id } = req.body
         if(req.files) {
             const file = req.files.image
             const filename = file.name
@@ -37,7 +38,7 @@ module.exports = {
                     req.flash("error", "Erro ao subir imagem")
                 }else {
                     const token = decoded(req.cookies.token)
-                    Posts.create({ title, text, author: token._id, image: filename }).then(doc => {
+                    Posts.create({ title, text, discussion: id, author: token._id, image: filename }).then(doc => {
                         res.redirect('/posts')
                         req.flash("success", "Post com id " + doc._id + "criado com sucesso")
                     })
